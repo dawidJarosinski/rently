@@ -17,7 +17,7 @@ public class Address {
     @Column(name = "property_id", nullable = false)
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "property_id", nullable = false)
     @MapsId
     private Property property;
@@ -39,4 +39,13 @@ public class Address {
 
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
+
+    public Address(String country, String city, String street, String houseNumber, String localNumber, String postalCode) {
+        this.country = country;
+        this.city = city;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.localNumber = localNumber;
+        this.postalCode = postalCode;
+    }
 }

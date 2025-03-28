@@ -37,6 +37,9 @@ public class Property {
     @Enumerated(EnumType.STRING)
     private PropertyType propertyType;
 
+    @Column(name = "approved", nullable = false)
+    private boolean approved;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     private User user;
@@ -45,4 +48,12 @@ public class Property {
     @PrimaryKeyJoinColumn
     private Address address;
 
+
+    public Property(String name, String description, Integer maxNumberOfGuests, BigDecimal pricePerNight, PropertyType propertyType) {
+        this.name = name;
+        this.description = description;
+        this.maxNumberOfGuests = maxNumberOfGuests;
+        this.pricePerNight = pricePerNight;
+        this.propertyType = propertyType;
+    }
 }
