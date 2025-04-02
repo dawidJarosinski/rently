@@ -36,7 +36,7 @@ public class SecurityConfig {
                                     .requestMatchers("/api/login").permitAll()
                                     .requestMatchers("/api/register").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/api/properties").hasRole("HOST")
+                                    .requestMatchers(HttpMethod.POST, "/api/properties/**").hasRole("HOST")
                                     .anyRequest().authenticated();
                         })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
