@@ -3,6 +3,7 @@ package com.rently.rentlybackend.service;
 import com.rently.rentlybackend.dto.request.LoginRequest;
 import com.rently.rentlybackend.dto.request.RegisterRequest;
 import com.rently.rentlybackend.dto.response.RegisterResponse;
+import com.rently.rentlybackend.dto.response.TokenResponse;
 import com.rently.rentlybackend.enums.Role;
 import com.rently.rentlybackend.model.User;
 import com.rently.rentlybackend.repository.UserRepository;
@@ -23,10 +24,10 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public String login(LoginRequest request) {
+    public TokenResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         User user = userRepository.findUserByEmail(request.email()).orElseThrow(() -> new UsernameNotFoundException("wrong username"));
-        return jwtService.generateToken(user);
+        return new TokenResponse(jwtService.generateToken(user));
     }
 
     @Transactional
