@@ -40,7 +40,7 @@ const AuthPage = () => {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="p-8">
             <div className="flex justify-center mb-6">
-              <Logo className="h-12" />
+              <Logo />
             </div>
             
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Witaj z powrotem</h2>
