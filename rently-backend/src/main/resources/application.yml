@@ -2,7 +2,7 @@ spring:
   application:
     name: rently-backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/rently-db
+    url: jdbc:postgresql://postgres:5432/rently-db
     username: postgres
     password: password
 

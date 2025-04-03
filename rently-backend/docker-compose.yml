@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: rently-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+  app:
+    image: dawidjarosinski/rently:latest
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres

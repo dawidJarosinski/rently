@@ -21,6 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/properties")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class PropertyController {
 
