@@ -295,7 +295,7 @@ const PropertyFormPage = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition duration-200 ${
+                  className={`px-6 py-3 text-white bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 shadow-lg shadow-purple-500/50 font-medium rounded-lg text-sm text-center me-2 mb-2 ${
                     isLoading ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 >
