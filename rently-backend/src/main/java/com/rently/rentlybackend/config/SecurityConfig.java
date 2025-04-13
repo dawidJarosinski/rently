@@ -32,12 +32,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         request -> {
                             request
-                                    .requestMatchers("/api/test").permitAll()
                                     .requestMatchers("/api/login").permitAll()
                                     .requestMatchers("/api/register").permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/api/properties/{id}/bookings").hasRole("USER")
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/api/properties/**").hasRole("HOST")
+                                    .requestMatchers(HttpMethod.POST, "/api/properties/{id}/bookings").hasRole("USER")
+                                    .requestMatchers("/api/host/**").hasRole("HOST")
                                     .anyRequest().authenticated();
                         })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

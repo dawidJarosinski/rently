@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,5 +28,11 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(rentService.save(request, propertyId, principal.getName()));
     }
 
-    //get rents by property (property as param)
+    @GetMapping("/bookings")
+    public ResponseEntity<List<BookingResponse>> findAllByUserId(
+            Principal principal
+    ) {
+        return ResponseEntity.ok(rentService.findAllByUser(principal.getName()));
+    }
+
 }

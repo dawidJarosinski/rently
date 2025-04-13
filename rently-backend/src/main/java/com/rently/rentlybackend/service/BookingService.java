@@ -34,13 +34,14 @@ public class BookingService {
     private final BookingRepository bookingRepository;
 
     @Transactional
-    public BookingResponse save(BookingRequest request, UUID propertyId, String currentUserUsername) {
-        User user = userRepository.findUserByEmail(currentUserUsername)
+    public BookingResponse save(BookingRequest request, UUID propertyId, String currentUserEmail) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
 
         Property property = propertyRepository.findPropertyById(propertyId)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
 
+        //todo: sprawdzic czy property is approved
         if (checkAvailability(property, request.checkIn(), request.checkOut())) {
             throw new BookingException("these dates are not available");
         }
@@ -66,5 +67,32 @@ public class BookingService {
 
     private boolean checkAvailability(Property property, LocalDate checkIn, LocalDate checkOut) {
         return rentRepository.existsBookingCollisionInDatesAndProperty(checkIn, checkOut, property);
+    }
+
+    public List<BookingResponse> findAllByUser(String currentUserEmail) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
+
+        return bookingRepository.findAllByUser(user)
+                .stream()
+                .map(bookingMapper::toDto)
+                .toList();
+    }
+
+    public List<BookingResponse> findAllByHost(String currentUserEmail, UUID propertyId) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
+
+        List<Booking> bookings = bookingRepository.findAllByProperty_User(user);
+
+        if(propertyId != null) {
+            bookings = bookings
+                    .stream()
+                    .filter(booking -> booking.getProperty().getId() == propertyId)
+                    .toList();
+        }
+        return bookings.stream()
+                .map(bookingMapper::toDto)
+                .toList();
     }
 }
