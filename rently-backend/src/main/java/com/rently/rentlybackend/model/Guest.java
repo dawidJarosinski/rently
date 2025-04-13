@@ -26,7 +26,11 @@ public class Guest {
     private String lastName;
 
     @JoinColumn(name = "rent_id", nullable = false)
-    @ManyToOne
-    private Rent rent;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Booking booking;
 
+    public Guest(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

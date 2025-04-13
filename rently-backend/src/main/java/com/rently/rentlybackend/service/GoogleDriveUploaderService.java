@@ -22,6 +22,7 @@ public class GoogleDriveUploaderService {
 
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
+    private final GoogleDriveService googleDriveService;
 
     public String uploadFileToDrive(UUID propertyId, java.io.File file, String currentUserUsername) throws Exception {
         User user = userRepository
@@ -32,7 +33,7 @@ public class GoogleDriveUploaderService {
         }
 
 
-        Drive service = GoogleDriveService.getDriveService();
+        Drive service = googleDriveService.getDriveService();
         String parentFolderId = "1S5aQ35FUsZeU8brYNAScFc0dCucvOAg1";
         String folderId = getOrCreateFolder(service, propertyId.toString(), parentFolderId);
 

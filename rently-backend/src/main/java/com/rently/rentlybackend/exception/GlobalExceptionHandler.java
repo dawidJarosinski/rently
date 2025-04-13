@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> propertyExceptionHandler(PropertyException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(BookingException.class)
+    public ResponseEntity<String> bookingExceptionHandler(BookingException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

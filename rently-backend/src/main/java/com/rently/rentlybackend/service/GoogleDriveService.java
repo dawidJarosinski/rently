@@ -8,6 +8,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -15,14 +16,13 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
+@Service
 public class GoogleDriveService {
-    private static final String APPLICATION_NAME = "rently";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-
     private static final String CREDENTIALS_FILE_PATH = getPathToCredentials();
 
 
-    public static Drive getDriveService() throws IOException, GeneralSecurityException {
+    public Drive getDriveService() throws IOException, GeneralSecurityException {
         GoogleCredentials credentials = GoogleCredentials
                 .fromStream(new FileInputStream(CREDENTIALS_FILE_PATH))
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));
