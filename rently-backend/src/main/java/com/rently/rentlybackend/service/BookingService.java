@@ -95,4 +95,20 @@ public class BookingService {
                 .map(bookingMapper::toDto)
                 .toList();
     }
+
+
+    @Transactional
+    public void delete(String currentUserEmail, UUID bookingId) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
+
+        Booking booking = bookingRepository.findBookingById(bookingId)
+                .orElseThrow(() -> new BookingException("wrong booking id"));
+
+        if(!booking.getUser().equals(user)) {
+            throw new BookingException("you are not able to manage other users bookings");
+        }
+
+        bookingRepository.delete(booking);
+    }
 }

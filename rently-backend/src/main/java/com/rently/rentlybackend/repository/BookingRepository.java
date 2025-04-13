@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BookingRepository extends JpaRepository<Booking, UUID> {
@@ -25,4 +26,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     List<Booking> findAllByUser(User user);
 
     List<Booking> findAllByProperty_User(User user);
+
+    Optional<Booking> findBookingById(UUID id);
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BookingController {
 
-    private final BookingService rentService;
+    private final BookingService bookingService;
 
     @PostMapping("/properties/{id}/bookings")
     public ResponseEntity<BookingResponse> save(
@@ -25,14 +25,19 @@ public class BookingController {
             Principal principal,
             @PathVariable("id") UUID propertyId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rentService.save(request, propertyId, principal.getName()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.save(request, propertyId, principal.getName()));
     }
 
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingResponse>> findAllByUserId(
             Principal principal
     ) {
-        return ResponseEntity.ok(rentService.findAllByUser(principal.getName()));
+        return ResponseEntity.ok(bookingService.findAllByUser(principal.getName()));
+    }
+
+    @DeleteMapping("/bookings/{id}")
+    public void delete(@PathVariable UUID id, Principal principal) {
+        bookingService.delete(principal.getName(), id);
     }
 
 }
