@@ -41,7 +41,10 @@ public class BookingService {
         Property property = propertyRepository.findPropertyById(propertyId)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
 
-        //todo: sprawdzic czy property is approved
+        if (!property.isApproved()) {
+            throw new BookingException("this property is not approved");
+        }
+
         if (checkAvailability(property, request.checkIn(), request.checkOut())) {
             throw new BookingException("these dates are not available");
         }
@@ -107,6 +110,21 @@ public class BookingService {
 
         if(!booking.getUser().equals(user)) {
             throw new BookingException("you are not able to manage other users bookings");
+        }
+
+        bookingRepository.delete(booking);
+    }
+
+    @Transactional
+    public void deleteByHost(String currentUserEmail, UUID bookingId) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
+
+        Booking booking = bookingRepository.findBookingById(bookingId)
+                .orElseThrow(() -> new BookingException("wrong booking id"));
+
+        if (booking.getProperty().getUser() != user) {
+            throw new BookingException("you are not able to manage other hosts bookings");
         }
 
         bookingRepository.delete(booking);

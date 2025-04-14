@@ -27,4 +27,9 @@ public class HostBookingController {
         return ResponseEntity.ok(bookingService.findAllByHost(principal.getName(), propertyId));
     }
 
+    @DeleteMapping("/bookings/{id}")
+    public void delete(Principal principal, @PathVariable UUID bookingId) {
+        bookingService.deleteByHost(principal.getName(), bookingId);
+    }
+
 }

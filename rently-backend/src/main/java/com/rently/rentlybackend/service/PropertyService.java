@@ -47,13 +47,40 @@ public class PropertyService {
 
     public PropertyResponse findById(UUID id) {
         Property property = propertyRepository.findPropertyById(id)
-                .orElseThrow(() -> new PropertyException("Wrong property id"));
+                .orElseThrow(() -> new PropertyException("wrong property id"));
         return propertyMapper.toDto(property, addressMapper.toDto(property.getAddress()));
     }
 
     public List<PropertyResponse> findAllByOwnerId(UUID id) {
         return propertyRepository.findPropertiesByUser_Id(id)
                 .stream()
+                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .toList();
+    }
+
+    @Transactional
+    public PropertyResponse approve(UUID id) {
+        Property property = propertyRepository.findPropertyById(id)
+                .orElseThrow(() -> new PropertyException("wrong property id"));
+        property.setApproved(true);
+
+        property = propertyRepository.save(property);
+
+        return propertyMapper.toDto(property, addressMapper.toDto(property.getAddress()));
+    }
+
+    @Transactional
+    public void decline(UUID id) {
+        Property property = propertyRepository.findPropertyById(id)
+                .orElseThrow(() -> new PropertyException("wrong property id"));
+
+        propertyRepository.delete(property);
+    }
+
+    public List<PropertyResponse> findPropertiesByApprove(boolean approve) {
+        return propertyRepository.findAll()
+                .stream()
+                .filter(property -> property.isApproved() == approve)
                 .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
                 .toList();
     }
