@@ -19,7 +19,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,11 +67,7 @@ public class BookingService {
 
         bookingRepository.save(booking);
 
-        return bookingMapper.toDto(booking);
-    }
-
-    private boolean checkAvailability(Property property, LocalDate checkIn, LocalDate checkOut) {
-        return rentRepository.existsBookingCollisionInDatesAndProperty(checkIn, checkOut, property);
+        return bookingMapper.toDto(booking, countFinalPrice(booking));
     }
 
     public List<BookingResponse> findAllByUser(String currentUserEmail) {
@@ -78,7 +76,7 @@ public class BookingService {
 
         return bookingRepository.findAllByUser(user)
                 .stream()
-                .map(bookingMapper::toDto)
+                .map(booking -> bookingMapper.toDto(booking, countFinalPrice(booking)))
                 .toList();
     }
 
@@ -95,7 +93,7 @@ public class BookingService {
                     .toList();
         }
         return bookings.stream()
-                .map(bookingMapper::toDto)
+                .map(booking -> bookingMapper.toDto(booking, countFinalPrice(booking)))
                 .toList();
     }
 
@@ -128,5 +126,13 @@ public class BookingService {
         }
 
         bookingRepository.delete(booking);
+    }
+
+    private BigDecimal countFinalPrice(Booking booking) {
+        return booking.getProperty().getPricePerNight().multiply(new BigDecimal(ChronoUnit.DAYS.between(booking.getCheckIn(), booking.getCheckOut())));
+    }
+
+    private boolean checkAvailability(Property property, LocalDate checkIn, LocalDate checkOut) {
+        return rentRepository.existsBookingCollisionInDatesAndProperty(checkIn, checkOut, property);
     }
 }

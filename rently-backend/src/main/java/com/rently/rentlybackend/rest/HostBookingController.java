@@ -28,8 +28,8 @@ public class HostBookingController {
     }
 
     @DeleteMapping("/bookings/{id}")
-    public void delete(Principal principal, @PathVariable UUID bookingId) {
-        bookingService.deleteByHost(principal.getName(), bookingId);
+    public void delete(Principal principal, @PathVariable UUID id) {
+        bookingService.deleteByHost(principal.getName(), id);
     }
 
 }

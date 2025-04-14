@@ -35,8 +35,10 @@ public class SecurityConfig {
                                     .requestMatchers("/api/login").permitAll()
                                     .requestMatchers("/api/register").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/api/properties/{id}/bookings").hasRole("USER")
                                     .requestMatchers("/api/host/**").hasRole("HOST")
+                                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                    .requestMatchers(HttpMethod.POST, "/api/properties/{id}/bookings").hasRole("USER")
+                                    .requestMatchers("/api/bookings/**").hasRole("USER")
                                     .anyRequest().authenticated();
                         })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
