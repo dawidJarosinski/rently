@@ -28,4 +28,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     List<Booking> findAllByProperty_User(User user);
 
     Optional<Booking> findBookingById(UUID id);
+
+    Optional<Booking> findBookingByUserAndProperty(User user, Property property);
 }

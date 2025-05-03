@@ -17,4 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> bookingExceptionHandler(BookingException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(RatingException.class)
+    public ResponseEntity<String> ratingExceptionHandler(RatingException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

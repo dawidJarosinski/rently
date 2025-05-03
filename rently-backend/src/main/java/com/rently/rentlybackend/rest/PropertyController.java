@@ -19,7 +19,6 @@ import java.util.UUID;
 public class PropertyController {
 
     private final PropertyService propertyService;
-    private final GoogleDriveUploaderService googleDriveUploaderService;
 
     @GetMapping("/{propertyId}")
     public ResponseEntity<PropertyResponse> findById(@PathVariable UUID propertyId) {

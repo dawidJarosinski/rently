@@ -1,0 +1,58 @@
+package com.rently.rentlybackend.service;
+
+import com.rently.rentlybackend.dto.request.RatingRequest;
+import com.rently.rentlybackend.dto.response.RatingResponse;
+import com.rently.rentlybackend.exception.BookingException;
+import com.rently.rentlybackend.exception.PropertyException;
+import com.rently.rentlybackend.exception.RatingException;
+import com.rently.rentlybackend.model.Booking;
+import com.rently.rentlybackend.model.Property;
+import com.rently.rentlybackend.model.Rating;
+import com.rently.rentlybackend.model.User;
+import com.rently.rentlybackend.repository.BookingRepository;
+import com.rently.rentlybackend.repository.PropertyRepository;
+import com.rently.rentlybackend.repository.RatingRepository;
+import com.rently.rentlybackend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class RatingService {
+    private final RatingRepository ratingRepository;
+    private final UserRepository userRepository;
+    private final PropertyRepository propertyRepository;
+    private final BookingRepository bookingRepository;
+
+    public RatingResponse save(UUID propertyId, RatingRequest request, String currentUserEmail) {
+        User user = userRepository.findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
+        Property property = propertyRepository.findPropertyById(propertyId)
+                .orElseThrow(() -> new PropertyException("wrong property id"));
+
+        Booking booking = bookingRepository.findBookingByUserAndProperty(user, property)
+                .orElseThrow(() -> new BookingException("you didn't book the property"));
+        if (booking.getCheckOut().isAfter(LocalDate.now())) {
+            throw new BookingException("you can't rate property before check out");
+        }
+        if (ratingRepository.existsRatingByUserAndProperty(user, property)) {
+            throw new RatingException("you have rated this property");
+        }
+
+        Rating rating = new Rating(request.rate(), request.comment(), property, user);
+        ratingRepository.save(rating);
+
+        return new RatingResponse(
+                rating.getId().toString(),
+                rating.getRate(),
+                rating.getComment(),
+                rating.getProperty().getId().toString(),
+                rating.getUser().getId().toString());
+    }
+
+    //todo get ratings by property
+}
