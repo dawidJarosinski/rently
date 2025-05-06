@@ -6,6 +6,7 @@ import PropertyFormPage from "./pages/PropertyFormPage";
 import HomePage from "./pages/HomePage";
 import HostPropertiesPage from "./pages/HostPropertiesPage";
 import AdminPropertiesPage from "./pages/AdminPropertiesPage";
+import PropertyDetailsPage from "./pages/PropertyDetailsPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/property-form" element={<PropertyFormPage />} />
         <Route path="/host/properties" element={<HostPropertiesPage />} />
         <Route path="/admin/properties" element={<AdminPropertiesPage />} />
+        <Route path="/properties/:id" element={<PropertyDetailsPage />} />
       </Routes>
     </Router>
   );
