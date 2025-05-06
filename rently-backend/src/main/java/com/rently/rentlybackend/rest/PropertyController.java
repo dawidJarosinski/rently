@@ -8,10 +8,12 @@ import com.rently.rentlybackend.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +50,7 @@ public class PropertyController {
 
             List<String> imageUrls = files.stream()
                     .filter(f -> f.getMimeType().startsWith("image/"))
-                    .map(f -> "https://drive.google.com/thumbnail?id=" + f.getId())
+                    .map(File::getId)
                     .toList();
 
             return ResponseEntity.ok(imageUrls);
@@ -57,4 +59,18 @@ public class PropertyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/images/{fileId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String fileId) {
+        try {
+            ByteArrayOutputStream outputStream = googleDriveUploaderService.getByteArrayOutputStream(fileId);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(outputStream.toByteArray());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

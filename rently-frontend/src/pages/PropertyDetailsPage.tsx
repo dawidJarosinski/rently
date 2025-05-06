@@ -54,8 +54,7 @@ const PropertyDetailsPage = () => {
 
     const fetchImages = async () => {
       const res = await api.get<string[]>(`/properties/${id}/images`);
-      const thumbnails = res.data.map(url => url.replace("/uc?", "/thumbnail?"));
-      setImages(thumbnails);
+      setImages(res.data.map(fileId => `http://localhost:8080/api/properties/images/${fileId}`));
     };
 
     fetchProperty();
@@ -114,16 +113,16 @@ const PropertyDetailsPage = () => {
       <Navbar />
 
       <div className="flex flex-col md:flex-row gap-6 p-6 min-h-[400px] bg-white">
-        <div className="w-full md:w-[70%]">
-            <div className="w-full aspect-w-16 aspect-h-9 bg-cyan-100 rounded-2xl border-2 border-pink-400 shadow-md overflow-hidden">
-                {images.length > 0 && (
-                    <img
-                    src={images[index]}
-                    alt="property"
-                    className="object-cover w-full h-full"
-                    />
-                )}
-            </div>
+        <div className="w-full md:w-[65%] max-w-5xl mx-auto">
+          <div className="aspect-w-16 aspect-h-9 bg-cyan-100 rounded-2xl border-2 border-pink-400 shadow-md overflow-hidden">
+            {images.length > 0 && (
+              <img
+                src={images[index]}
+                alt="property"
+                className="object-cover w-full h-full"
+              />
+            )}
+          </div>
           <div className="flex justify-center mt-2 space-x-2">
             {images.map((_, i) => (
               <span
@@ -137,7 +136,9 @@ const PropertyDetailsPage = () => {
           </div>
 
           <div className="text-center mt-4">
-            <h2 className="text-2xl font-bold text-pink-600">{property.name} in {property.address.city}</h2>
+            <h2 className="text-2xl font-bold text-pink-600">
+              {property.name} in {property.address.city}
+            </h2>
             <p className="text-sm text-purple-500 mt-1">{property.description}</p>
           </div>
         </div>
@@ -216,7 +217,7 @@ const PropertyDetailsPage = () => {
 
           <button
             onClick={handleBooking}
-            className="bg-white text-pink-600 font-semibold py-2 rounded-xl hover:bg-gray-100 transition disabled:opacity-50 w-2xs ml-2"
+            className="bg-white text-pink-600 font-semibold py-2 rounded-xl hover:bg-gray-100 transition disabled:opacity-50 w-full"
             disabled={!checkIn || !checkOut || guests.length === 0}
           >
             Rent

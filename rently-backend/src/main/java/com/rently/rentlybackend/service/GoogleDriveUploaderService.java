@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.GeneralSecurityException;
@@ -81,6 +82,13 @@ public class GoogleDriveUploaderService {
         }
 
         return folders.get(0).getId();
+    }
+
+    public ByteArrayOutputStream getByteArrayOutputStream(String fileId) throws GeneralSecurityException, IOException {
+        Drive drive = googleDriveService.getDriveService();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        drive.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+        return outputStream;
     }
 
 

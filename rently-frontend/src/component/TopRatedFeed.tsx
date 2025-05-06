@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { PropertyResponse } from "../types/PropertyResponse";
 import PropertyCard from "../component/PropertyCard";
@@ -22,7 +21,7 @@ const TopRatedFeed = () => {
           props.map(async (prop) => {
             try {
               const imageRes = await api.get<string[]>(`/properties/${prop.id}/images`);
-              const thumbnails = imageRes.data.map(url => url.replace("/uc?", "/thumbnail?"));
+              const thumbnails = imageRes.data.map(fileId => `https://drive.google.com/thumbnail?id=${fileId}`);
               return { ...prop, images: thumbnails };
             } catch {
               return { ...prop, images: [] };
