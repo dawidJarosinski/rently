@@ -3,6 +3,7 @@ package com.rently.rentlybackend.service;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.FileList;
 import com.rently.rentlybackend.model.User;
 import com.rently.rentlybackend.repository.PropertyRepository;
 import com.rently.rentlybackend.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +51,38 @@ public class GoogleDriveUploaderService {
 
         return uploadedFile.getId();
     }
+
+    public List<com.google.api.services.drive.model.File> listFilesInFolder(String folderId) throws IOException, GeneralSecurityException {
+        Drive drive = googleDriveService.getDriveService();
+        String query = "'" + folderId + "' in parents and trashed = false";
+
+        FileList result = drive.files().list()
+                .setQ(query)
+                .setFields("files(id, name, mimeType)")
+                .execute();
+
+        return result.getFiles();
+    }
+
+    public String findFolderIdByPropertyId(UUID propertyId) throws Exception {
+        String parentFolderId = "1S5aQ35FUsZeU8brYNAScFc0dCucvOAg1";
+        Drive drive = googleDriveService.getDriveService();
+
+        String query = "name = '" + propertyId + "' and mimeType = 'application/vnd.google-apps.folder' and '" + parentFolderId + "' in parents and trashed = false";
+
+        List<File> folders = drive.files().list()
+                .setQ(query)
+                .setFields("files(id)")
+                .execute()
+                .getFiles();
+
+        if (folders.isEmpty()) {
+            throw new RuntimeException("Folder not found for property: " + propertyId);
+        }
+
+        return folders.get(0).getId();
+    }
+
 
     private String getOrCreateFolder(Drive service, String propertyId, String parentFolderId) throws IOException {
         List<File> folders = service.files().list()

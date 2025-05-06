@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Logo from "../component/Logo";
+import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 interface LoginForm {
   email: string;
@@ -18,14 +20,17 @@ const AuthPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
+  
     try {
-      const response = await api.post<{ token: string }>("/login", formData);
-      localStorage.setItem("token", response.data.token);
+      const response = await api.post("/login", formData);
+      const { token, user } = response.data;
+      login(token, user);
       navigate("/");
     } catch (err: any) {
       setError(err.response?.data?.message || "Coś poszło nie tak!");
@@ -115,9 +120,9 @@ const AuthPage = () => {
           
           <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
             <span className="text-gray-600 text-sm">Nie masz konta?</span>{" "}
-            <a href="/register" className="text-blue-600 hover:text-blue-800 font-medium text-sm">
+            <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium text-sm">
               Zarejestruj się
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -16,8 +16,10 @@ import com.rently.rentlybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,15 +30,18 @@ public class RatingService {
     private final PropertyRepository propertyRepository;
     private final BookingRepository bookingRepository;
 
+    @Transactional
     public RatingResponse save(UUID propertyId, RatingRequest request, String currentUserEmail) {
         User user = userRepository.findUserByEmail(currentUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
         Property property = propertyRepository.findPropertyById(propertyId)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
 
-        Booking booking = bookingRepository.findBookingByUserAndProperty(user, property)
-                .orElseThrow(() -> new BookingException("you didn't book the property"));
-        if (booking.getCheckOut().isAfter(LocalDate.now())) {
+        List<Booking> bookings = bookingRepository.findBookingsByUserAndProperty(user, property);
+        if (bookings.isEmpty()) {
+            throw new BookingException("you didn't book the property");
+        }
+        if (bookings.stream().filter(booking -> booking.getCheckOut().isBefore(LocalDate.now())).toList().isEmpty()) {
             throw new BookingException("you can't rate property before check out");
         }
         if (ratingRepository.existsRatingByUserAndProperty(user, property)) {

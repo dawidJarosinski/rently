@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @RequestMapping("/api/admin")
 public class AdminPropertyController {
 
@@ -27,7 +28,7 @@ public class AdminPropertyController {
         return ResponseEntity.ok(propertyService.approve(id));
     }
 
-    @DeleteMapping("/propreties/{id}/decline")
+    @DeleteMapping("/properties/{id}/decline")
     public void decline(@PathVariable UUID id) {
         propertyService.decline(id);
     }

@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class RatingController {
 
     private final RatingService ratingService;

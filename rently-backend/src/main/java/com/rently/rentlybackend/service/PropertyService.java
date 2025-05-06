@@ -84,4 +84,12 @@ public class PropertyService {
                 .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
                 .toList();
     }
+
+    public List<PropertyResponse> findAllApprovedOrderByAvgRatingDesc(Integer limit) {
+        return propertyRepository.findAllApprovedOrderByAvgRatingDesc()
+                .stream()
+                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .limit(limit)
+                .toList();
+    }
 }

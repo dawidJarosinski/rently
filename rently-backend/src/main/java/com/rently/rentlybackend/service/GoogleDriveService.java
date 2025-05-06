@@ -31,7 +31,9 @@ public class GoogleDriveService {
                 GoogleNetHttpTransport.newTrustedTransport(),
                 JSON_FACTORY,
                 new HttpCredentialsAdapter(credentials)
-        ).build();
+        )
+                .setApplicationName("RentlyApp")
+                .build();
     }
 
     private static String getPathToCredentials() {
