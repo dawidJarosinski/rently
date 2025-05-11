@@ -7,6 +7,7 @@ import com.rently.rentlybackend.service.GoogleDriveUploaderService;
 import com.rently.rentlybackend.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +28,16 @@ public class PropertyController {
 
     private final PropertyService propertyService;
     private final GoogleDriveUploaderService googleDriveUploaderService;
+
+    @GetMapping()
+    public ResponseEntity<List<PropertyResponse>> findAll(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut,
+            @RequestParam(required = false) Integer guestCount
+    ) {
+        return ResponseEntity.ok(propertyService.findAll(location, checkIn, checkOut, guestCount));
+    }
 
     @GetMapping("/{propertyId}")
     public ResponseEntity<PropertyResponse> findById(@PathVariable UUID propertyId) {

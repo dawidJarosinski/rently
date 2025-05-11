@@ -6,8 +6,10 @@ import com.rently.rentlybackend.exception.PropertyException;
 import com.rently.rentlybackend.mapper.AddressMapper;
 import com.rently.rentlybackend.mapper.PropertyMapper;
 import com.rently.rentlybackend.model.Address;
+import com.rently.rentlybackend.model.Booking;
 import com.rently.rentlybackend.model.Property;
 import com.rently.rentlybackend.model.User;
+import com.rently.rentlybackend.repository.BookingRepository;
 import com.rently.rentlybackend.repository.PropertyRepository;
 import com.rently.rentlybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,19 @@ public class PropertyService {
     private final UserRepository userRepository;
     private final PropertyMapper propertyMapper;
     private final AddressMapper addressMapper;
+    private final BookingRepository bookingRepository;
+
+    public List<PropertyResponse> findAll(String location, LocalDate checkIn, LocalDate checkOut, Integer guestCount) {
+        List<Property> properties = propertyRepository.findAll().stream()
+                .filter(property -> location == null || matchesLocation(property, location))
+                .filter(property -> guestCount == null || property.getMaxNumberOfGuests() >= guestCount)
+                .filter(property -> isAvailable(property, checkIn, checkOut))
+                .toList();
+
+        return properties.stream()
+                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .toList();
+    }
 
     @Transactional
     public PropertyResponse save(PropertyRequest request, String currentUserUsername) {
@@ -91,5 +107,16 @@ public class PropertyService {
                 .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
                 .limit(limit)
                 .toList();
+    }
+
+    private boolean isAvailable(Property property, LocalDate checkIn, LocalDate checkOut) {
+        if (checkIn == null || checkOut == null) return true;
+        return !bookingRepository.existsBookingCollisionInDatesAndProperty(checkIn, checkOut, property);
+    }
+
+    private boolean matchesLocation(Property p, String location) {
+        String loc = location.toLowerCase();
+        return p.getAddress().getCity().toLowerCase().contains(loc) ||
+                p.getAddress().getCountry().toLowerCase().contains(loc);
     }
 }
