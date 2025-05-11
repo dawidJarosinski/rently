@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { PropertyWithImages } from "../types/PropertyResponse";
 
 interface Props {
@@ -6,16 +5,16 @@ interface Props {
   currentImageIndex: number;
   onPrev: () => void;
   onNext: () => void;
+  onClick: () => void;
 }
 
-const PropertyCard = ({ property, currentImageIndex, onPrev, onNext }: Props) => {
-  const navigate = useNavigate();
+const PropertyCard = ({ property, currentImageIndex, onPrev, onNext, onClick }: Props) => {
   const currentImage = property.images[currentImageIndex] || "https://placehold.co/300x200?text=Brak+zdjęcia";
 
   return (
     <div
       className="bg-cyan-100 rounded-lg p-4 text-center shadow border border-pink-400 cursor-pointer hover:shadow-lg transition"
-      onClick={() => navigate(`/properties/${property.id}`)}
+      onClick={onClick}
     >
       <div className="relative">
         <img

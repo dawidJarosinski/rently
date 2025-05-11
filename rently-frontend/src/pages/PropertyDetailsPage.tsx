@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../component/Navbar";
 
@@ -45,6 +45,7 @@ const PropertyDetailsPage = () => {
   const [finalPrice, setFinalPrice] = useState<number | null>(null);
   const [bookingResponse, setBookingResponse] = useState<BookingResponse | null>(null);
   const [error, setError] = useState<string>("");
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -76,6 +77,21 @@ const PropertyDetailsPage = () => {
     }
   }, [checkIn, checkOut, property]);
 
+  useEffect(() => {
+    const checkInFromQuery = searchParams.get("checkIn");
+    const checkOutFromQuery = searchParams.get("checkOut");
+    const guestsFromQuery = searchParams.get("guests");
+  
+    if (checkInFromQuery) setCheckIn(checkInFromQuery);
+    if (checkOutFromQuery) setCheckOut(checkOutFromQuery);
+    if (guestsFromQuery) {
+      const guestCount = parseInt(guestsFromQuery);
+      if (!isNaN(guestCount)) {
+        setGuests(Array.from({ length: guestCount }, () => ({ firstName: "", lastName: "" })));
+      }
+    }
+  }, [searchParams]);
+
   const handleAddGuest = () => {
     if (!newGuest.firstName.trim() || !newGuest.lastName.trim()) return;
     if (guests.length >= (property?.maxNumberOfGuests ?? 0)) return;
@@ -89,13 +105,12 @@ const PropertyDetailsPage = () => {
   };
 
   const handleBooking = async () => {
-    if (!checkIn || !checkOut || guests.length === 0 || !property) return;
+    if (!checkIn || !checkOut || !property) return;
 
     try {
       const payload = {
         checkIn,
-        checkOut,
-        guests
+        checkOut
       };
 
       const res = await api.post<BookingResponse>(`/properties/${property.id}/bookings`, payload);

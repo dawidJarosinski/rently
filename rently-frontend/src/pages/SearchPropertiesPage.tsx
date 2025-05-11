@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import PropertyCard from "../component/PropertyCard";
 import { PropertyWithImages } from "../types/PropertyResponse";
@@ -11,6 +11,7 @@ const SearchPropertiesPage = () => {
   const searchParams = new URLSearchParams(locationSearch.search);
   const [properties, setProperties] = useState<PropertyWithImages[]>([]);
   const [imageIndices, setImageIndices] = useState<Record<string, number>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -65,6 +66,18 @@ const SearchPropertiesPage = () => {
     }));
   };
 
+  const handleNavigate = (id: string) => {
+    const query = new URLSearchParams();
+    const checkIn = searchParams.get("checkIn");
+    const checkOut = searchParams.get("checkOut");
+  
+    if (checkIn) query.set("checkIn", checkIn);
+    if (checkOut) query.set("checkOut", checkOut);
+  
+    navigate(`/properties/${id}?${query.toString()}`);
+  };
+  
+
   return (
     <>
       <Navbar />
@@ -81,6 +94,7 @@ const SearchPropertiesPage = () => {
               currentImageIndex={imageIndices[property.id] || 0}
               onPrev={() => handlePrev(property.id)}
               onNext={() => handleNext(property.id)}
+              onClick={() => handleNavigate(property.id)}
             />
           ))}
         </div>

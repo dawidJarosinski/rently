@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import { PropertyResponse } from "../types/PropertyResponse";
 import PropertyCard from "../component/PropertyCard";
+import { useNavigate } from "react-router-dom";
 
 interface PropertyWithImages extends PropertyResponse {
   images: string[];
@@ -10,6 +11,7 @@ interface PropertyWithImages extends PropertyResponse {
 const TopRatedFeed = () => {
   const [properties, setProperties] = useState<PropertyWithImages[]>([]);
   const [imageIndices, setImageIndices] = useState<Record<string, number>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPropertiesWithImages = async () => {
@@ -68,6 +70,7 @@ const TopRatedFeed = () => {
           currentImageIndex={imageIndices[property.id] || 0}
           onPrev={() => handlePrev(property.id)}
           onNext={() => handleNext(property.id)}
+          onClick={() => navigate(`/properties/${property.id}`)}
         />
       ))}
       </div>
