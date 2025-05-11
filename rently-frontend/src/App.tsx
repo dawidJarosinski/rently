@@ -9,6 +9,7 @@ import AdminPropertiesPage from "./pages/AdminPropertiesPage";
 import PropertyDetailsPage from "./pages/PropertyDetailsPage";
 import BookingsPage from "./pages/BookingsPage";
 import HostBookingsPage from "./pages/HostBookingsPage";
+import SearchPropertiesPage from "./pages/SearchPropertiesPage";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
         <Route path="/properties/:id" element={<PropertyDetailsPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
         <Route path="/host/properties/:propertyId/bookings" element={<HostBookingsPage />} />
-
+        <Route path="/search" element={<SearchPropertiesPage/ >} />
+        <Route path="/unauthorized" element={<div>Unauthorized</div>} />
       </Routes>
     </Router>
   );

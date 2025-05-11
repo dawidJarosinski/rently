@@ -29,7 +29,7 @@ public class PropertyController {
     private final PropertyService propertyService;
     private final GoogleDriveUploaderService googleDriveUploaderService;
 
-    @GetMapping()
+    @GetMapping("/search")
     public ResponseEntity<List<PropertyResponse>> findAll(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
