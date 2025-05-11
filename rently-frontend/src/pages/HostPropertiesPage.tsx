@@ -52,7 +52,8 @@ const HostPropertiesPage = () => {
               <div
                 key={property.id}
                 className="bg-cyan-100 p-4 rounded-lg shadow border border-pink-300 cursor-pointer hover:shadow-lg transition"
-                onClick={() => navigate(`/properties/${property.id}`)}
+                onClick={() => navigate(`/host/properties/${property.id}/bookings`)}
+
               >
                 <h2 className="text-lg font-semibold text-pink-600">{property.name}</h2>
                 <p className="text-gray-700">

@@ -7,6 +7,8 @@ import HomePage from "./pages/HomePage";
 import HostPropertiesPage from "./pages/HostPropertiesPage";
 import AdminPropertiesPage from "./pages/AdminPropertiesPage";
 import PropertyDetailsPage from "./pages/PropertyDetailsPage";
+import BookingsPage from "./pages/BookingsPage";
+import HostBookingsPage from "./pages/HostBookingsPage";
 
 function App() {
   return (
@@ -20,6 +22,9 @@ function App() {
         <Route path="/host/properties" element={<HostPropertiesPage />} />
         <Route path="/admin/properties" element={<AdminPropertiesPage />} />
         <Route path="/properties/:id" element={<PropertyDetailsPage />} />
+        <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="/host/properties/:propertyId/bookings" element={<HostBookingsPage />} />
+
       </Routes>
     </Router>
   );

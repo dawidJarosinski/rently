@@ -86,10 +86,10 @@ public class BookingService {
 
         List<Booking> bookings = bookingRepository.findAllByProperty_User(user);
 
-        if(propertyId != null) {
+        if (propertyId != null) {
             bookings = bookings
                     .stream()
-                    .filter(booking -> booking.getProperty().getId() == propertyId)
+                    .filter(booking -> booking.getProperty().getId().equals(propertyId))
                     .toList();
         }
         return bookings.stream()

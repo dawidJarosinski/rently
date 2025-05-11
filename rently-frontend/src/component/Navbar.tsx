@@ -58,11 +58,11 @@ const Navbar = () => {
                 {user.role === "USER" && (
                   <li>
                     <Link
-                      to="/reservations"
+                      to="/bookings"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setOpen(false)}
                     >
-                      My Reservations
+                      My Bookings
                     </Link>
                   </li>
                 )}
