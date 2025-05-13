@@ -6,6 +6,8 @@ import com.rently.rentlybackend.enums.PropertyType;
 import com.rently.rentlybackend.model.Property;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class PropertyMapper {
 
@@ -19,7 +21,7 @@ public class PropertyMapper {
         );
     }
 
-    public PropertyResponse toDto(Property property, Double averageRate, PropertyResponse.Address addressResponse) {
+    public PropertyResponse toDto(Property property, Double averageRate, PropertyResponse.Address addressResponse, List<String> images) {
         return new PropertyResponse(
                 property.getId().toString(),
                 property.getUser().getId().toString(),
@@ -30,7 +32,8 @@ public class PropertyMapper {
                 property.getPricePerNight(),
                 property.isApproved(),
                 averageRate,
-                addressResponse
+                addressResponse,
+                images
         );
     }
 }

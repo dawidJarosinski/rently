@@ -2,55 +2,51 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import PropertyCard from "../component/PropertyCard";
-import { PropertyWithImages } from "../types/PropertyResponse";
+import { PropertyResponse } from "../types/PropertyResponse";
 import Navbar from "../component/Navbar";
 import SearchBar from "../component/SearchBar";
 
 const SearchPropertiesPage = () => {
   const locationSearch = useLocation();
   const searchParams = new URLSearchParams(locationSearch.search);
-  const [properties, setProperties] = useState<PropertyWithImages[]>([]);
+  const [properties, setProperties] = useState<PropertyResponse[]>([]);
   const [imageIndices, setImageIndices] = useState<Record<string, number>>({});
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const res = await api.get<PropertyWithImages[]>('/properties/search', {
-          params: {
-            location: searchParams.get("destination") || undefined,
-            checkIn: searchParams.get("checkIn") || undefined,
-            checkOut: searchParams.get("checkOut") || undefined,
-            guestCount: searchParams.get("guests") || undefined,
-          },
-        });
+useEffect(() => {
+  const fetchProperties = async () => {
+    try {
+      const res = await api.get<PropertyResponse[]>('/properties/search', {
+        params: {
+          location: searchParams.get("destination") || undefined,
+          checkIn: searchParams.get("checkIn") || undefined,
+          checkOut: searchParams.get("checkOut") || undefined,
+          guestCount: searchParams.get("guests") || undefined,
+        },
+      });
 
-        const propsWithImages = await Promise.all(
-          res.data.map(async (prop) => {
-            try {
-              const imageRes = await api.get<string[]>(`/properties/${prop.id}/images`);
-              const thumbnails = imageRes.data.map(
-                (fileId) => `https://drive.google.com/thumbnail?id=${fileId}`
-              );
-              return { ...prop, images: thumbnails };
-            } catch {
-              return { ...prop, images: [] };
-            }
-          })
-        );
+      const backendUrl = "http://localhost:8080";
 
-        setProperties(propsWithImages);
+      const propsWithFullImages = res.data.map((prop) => ({
+        ...prop,
+        images: prop.images.map((path) =>
+          path.startsWith("http") ? path : `${backendUrl}${path}`
+        ),
+      }));
 
-        const indexMap: Record<string, number> = {};
-        propsWithImages.forEach((p) => (indexMap[p.id] = 0));
-        setImageIndices(indexMap);
-      } catch (err) {
-        console.error("Błąd podczas wyszukiwania", err);
-      }
-    };
+      setProperties(propsWithFullImages);
 
-    fetchProperties();
-  }, [locationSearch.search]);
+      const indexMap: Record<string, number> = {};
+      propsWithFullImages.forEach((p) => (indexMap[p.id] = 0));
+      setImageIndices(indexMap);
+    } catch (err) {
+      console.error("Błąd podczas wyszukiwania", err);
+    }
+  };
+
+  fetchProperties();
+}, [locationSearch.search]);
+
 
   const handlePrev = (id: string) => {
     setImageIndices((prev) => ({

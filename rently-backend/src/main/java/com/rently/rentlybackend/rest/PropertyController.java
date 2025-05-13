@@ -54,24 +54,6 @@ public class PropertyController {
         return ResponseEntity.ok(propertyService.findAllApprovedOrderByAvgRatingDesc(limit));
     }
 
-    @GetMapping("/{propertyId}/images")
-    public ResponseEntity<List<String>> getImageLinksForProperty(@PathVariable UUID propertyId) {
-        try {
-            String folderId = googleDriveUploaderService.findFolderIdByPropertyId(propertyId);
-            List<File> files = googleDriveUploaderService.listFilesInFolder(folderId);
-
-            List<String> imageUrls = files.stream()
-                    .filter(f -> f.getMimeType().startsWith("image/"))
-                    .map(File::getId)
-                    .toList();
-
-            return ResponseEntity.ok(imageUrls);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @GetMapping("/images/{fileId}")
     public ResponseEntity<byte[]> getImage(@PathVariable String fileId) {
         try {

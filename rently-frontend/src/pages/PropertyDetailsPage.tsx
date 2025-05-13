@@ -2,19 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../component/Navbar";
-
-interface Property {
-  id: string;
-  name: string;
-  description: string;
-  propertyType: string;
-  pricePerNight: number;
-  maxNumberOfGuests: number;
-  address: {
-    city: string;
-    country: string;
-  };
-}
+import { PropertyResponse } from "../types/PropertyResponse";
 
 interface Guest {
   firstName: string;
@@ -33,7 +21,7 @@ interface BookingResponse {
 
 const PropertyDetailsPage = () => {
   const { id } = useParams();
-  const [property, setProperty] = useState<Property | null>(null);
+  const [property, setProperty] = useState<PropertyResponse | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
 
@@ -47,20 +35,29 @@ const PropertyDetailsPage = () => {
   const [error, setError] = useState<string>("");
   const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    const fetchProperty = async () => {
-      const res = await api.get<Property>(`/properties/${id}`);
-      setProperty(res.data);
-    };
+useEffect(() => {
+  const fetchProperty = async () => {
+    try {
+      const res = await api.get<PropertyResponse>(`/properties/${id}`);
+      const backendUrl = "http://localhost:8080";
 
-    const fetchImages = async () => {
-      const res = await api.get<string[]>(`/properties/${id}/images`);
-      setImages(res.data.map(fileId => `http://localhost:8080/api/properties/images/${fileId}`));
-    };
+      const prop = {
+        ...res.data,
+        images: res.data.images.map((path) =>
+          path.startsWith("http") ? path : `${backendUrl}${path}`
+        ),
+      };
 
-    fetchProperty();
-    fetchImages();
-  }, [id]);
+      setProperty(prop);
+      setImages(prop.images);
+    } catch (err) {
+      console.error("Błąd podczas ładowania property:", err);
+    }
+  };
+
+  fetchProperty();
+}, [id]);
+
 
   useEffect(() => {
     if (checkIn && checkOut && property) {

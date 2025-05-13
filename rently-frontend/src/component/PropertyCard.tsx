@@ -1,8 +1,8 @@
-import { PropertyWithImages } from "../types/PropertyResponse";
+import { PropertyResponse } from "../types/PropertyResponse";
 import { Star } from "lucide-react";
 
 interface Props {
-  property: PropertyWithImages;
+  property: PropertyResponse;
   currentImageIndex: number;
   onPrev: () => void;
   onNext: () => void;

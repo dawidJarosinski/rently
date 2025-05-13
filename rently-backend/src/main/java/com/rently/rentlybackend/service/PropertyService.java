@@ -32,6 +32,7 @@ public class PropertyService {
     private final AddressMapper addressMapper;
     private final BookingRepository bookingRepository;
     private final RatingRepository ratingRepository;
+    private final GoogleDriveUploaderService googleDriveUploaderService;
 
     public List<PropertyResponse> findAll(String location, LocalDate checkIn, LocalDate checkOut, Integer guestCount) {
         List<Property> properties = propertyRepository.findAll().stream()
@@ -39,9 +40,12 @@ public class PropertyService {
                 .filter(property -> guestCount == null || property.getMaxNumberOfGuests() >= guestCount)
                 .filter(property -> isAvailable(property, checkIn, checkOut))
                 .toList();
-
         return properties.stream()
-                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(
+                        property,
+                        ratingRepository.countAverageRateByProperty(property),
+                        addressMapper.toDto(property.getAddress()),
+                        convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))))
                 .toList();
     }
 
@@ -60,19 +64,34 @@ public class PropertyService {
 
         propertyRepository.save(property);
 
-        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(address));
+        return propertyMapper.toDto(
+                property,
+                ratingRepository.countAverageRateByProperty(property),
+                addressMapper.toDto(property.getAddress()),
+                convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+        );
     }
 
     public PropertyResponse findById(UUID id) {
         Property property = propertyRepository.findPropertyById(id)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
-        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress()));
+        return propertyMapper.toDto(
+                property,
+                ratingRepository.countAverageRateByProperty(property),
+                addressMapper.toDto(property.getAddress()),
+                convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+        );
     }
 
     public List<PropertyResponse> findAllByOwnerId(UUID id) {
         return propertyRepository.findPropertiesByUser_Id(id)
                 .stream()
-                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(
+                        property,
+                        ratingRepository.countAverageRateByProperty(property),
+                        addressMapper.toDto(property.getAddress()),
+                        convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+                ))
                 .toList();
     }
 
@@ -84,7 +103,12 @@ public class PropertyService {
 
         property = propertyRepository.save(property);
 
-        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress()));
+        return propertyMapper.toDto(
+                property,
+                ratingRepository.countAverageRateByProperty(property),
+                addressMapper.toDto(property.getAddress()),
+                convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+        );
     }
 
     @Transactional
@@ -99,14 +123,24 @@ public class PropertyService {
         return propertyRepository.findAll()
                 .stream()
                 .filter(property -> property.isApproved() == approve)
-                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(
+                        property,
+                        ratingRepository.countAverageRateByProperty(property),
+                        addressMapper.toDto(property.getAddress()),
+                        convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+                ))
                 .toList();
     }
 
     public List<PropertyResponse> findAllApprovedOrderByAvgRatingDesc(Integer limit) {
         return propertyRepository.findAllApprovedOrderByAvgRatingDesc()
                 .stream()
-                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(
+                        property,
+                        ratingRepository.countAverageRateByProperty(property),
+                        addressMapper.toDto(property.getAddress()),
+                        convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
+                ))
                 .limit(limit)
                 .toList();
     }
@@ -120,5 +154,9 @@ public class PropertyService {
         String loc = location.toLowerCase();
         return p.getAddress().getCity().toLowerCase().contains(loc) ||
                 p.getAddress().getCountry().toLowerCase().contains(loc);
+    }
+
+    private List<String> convertImagesIdsToImageUrls(List<String> images) {
+        return images.stream().map(image -> "/api/properties/images/" + image).toList();
     }
 }

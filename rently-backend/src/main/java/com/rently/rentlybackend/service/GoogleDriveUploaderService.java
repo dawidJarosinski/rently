@@ -53,35 +53,45 @@ public class GoogleDriveUploaderService {
         return uploadedFile.getId();
     }
 
-    public List<com.google.api.services.drive.model.File> listFilesInFolder(String folderId) throws IOException, GeneralSecurityException {
-        Drive drive = googleDriveService.getDriveService();
-        String query = "'" + folderId + "' in parents and trashed = false";
-
-        FileList result = drive.files().list()
-                .setQ(query)
-                .setFields("files(id, name, mimeType)")
-                .execute();
-
-        return result.getFiles();
-    }
-
-    public String findFolderIdByPropertyId(UUID propertyId) throws Exception {
+    public List<String> findPhotosIdByPropertyId(UUID propertyId) {
         String parentFolderId = "1S5aQ35FUsZeU8brYNAScFc0dCucvOAg1";
-        Drive drive = googleDriveService.getDriveService();
+        Drive drive = null;
+        try {
+            drive = googleDriveService.getDriveService();
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
 
-        String query = "name = '" + propertyId + "' and mimeType = 'application/vnd.google-apps.folder' and '" + parentFolderId + "' in parents and trashed = false";
+        String query1 = "name = '" + propertyId + "' and mimeType = 'application/vnd.google-apps.folder' and '" + parentFolderId + "' in parents and trashed = false";
 
-        List<File> folders = drive.files().list()
-                .setQ(query)
-                .setFields("files(id)")
-                .execute()
-                .getFiles();
+        List<File> folders = null;
+        try {
+            folders = drive.files().list()
+                    .setQ(query1)
+                    .setFields("files(id)")
+                    .execute()
+                    .getFiles();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         if (folders.isEmpty()) {
             throw new RuntimeException("Folder not found for property: " + propertyId);
         }
 
-        return folders.get(0).getId();
+
+        String query2 = "'" + folders.get(0).getId() + "' in parents and trashed = false";
+
+        FileList result = null;
+        try {
+            result = drive.files().list()
+                    .setQ(query2)
+                    .setFields("files(id, name, mimeType)")
+                    .execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result.getFiles().stream().map(File::getId).toList();
     }
 
     public ByteArrayOutputStream getByteArrayOutputStream(String fileId) throws GeneralSecurityException, IOException {

@@ -1,6 +1,7 @@
 package com.rently.rentlybackend.dto.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record PropertyResponse(
         String id,
@@ -12,7 +13,8 @@ public record PropertyResponse(
         BigDecimal pricePerNight,
         boolean approved,
         Double averageRate,
-        Address address
+        Address address,
+        List<String> images
 ) {
     public record Address(
             String country,
