@@ -19,7 +19,7 @@ public class PropertyMapper {
         );
     }
 
-    public PropertyResponse toDto(Property property, PropertyResponse.Address addressResponse) {
+    public PropertyResponse toDto(Property property, Double averageRate, PropertyResponse.Address addressResponse) {
         return new PropertyResponse(
                 property.getId().toString(),
                 property.getUser().getId().toString(),
@@ -29,6 +29,7 @@ public class PropertyMapper {
                 property.getMaxNumberOfGuests(),
                 property.getPricePerNight(),
                 property.isApproved(),
+                averageRate,
                 addressResponse
         );
     }

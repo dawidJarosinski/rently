@@ -19,7 +19,7 @@ public interface PropertyRepository extends JpaRepository<Property, UUID> {
       LEFT JOIN p.ratings r
       WHERE p.approved = true
       GROUP BY p
-      ORDER BY AVG(r.rate) DESC
+      ORDER BY COALESCE(AVG(r.rate), 0) DESC
     """)
     List<Property> findAllApprovedOrderByAvgRatingDesc();
 }

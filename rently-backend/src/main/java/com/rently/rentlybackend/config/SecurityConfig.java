@@ -34,6 +34,7 @@ public class SecurityConfig {
                             request
                                     .requestMatchers("/api/login").permitAll()
                                     .requestMatchers("/api/register").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "/property/{id}/ratings/average").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
                                     .requestMatchers("/api/host/**").hasRole("HOST")
                                     .requestMatchers("/api/admin/**").hasRole("ADMIN")

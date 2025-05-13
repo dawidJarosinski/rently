@@ -1,4 +1,5 @@
 import { PropertyWithImages } from "../types/PropertyResponse";
+import { Star } from "lucide-react";
 
 interface Props {
   property: PropertyWithImages;
@@ -22,6 +23,12 @@ const PropertyCard = ({ property, currentImageIndex, onPrev, onNext, onClick }: 
           alt={property.name}
           className="w-full h-40 object-cover rounded-md"
         />
+
+        <div className="absolute top-0 left-0 m-2 flex items-center bg-white bg-opacity-80 px-2 py-1 rounded-full text-sm font-semibold text-pink-600 shadow">
+          <Star className="w-4 h-4 mr-1 fill-yellow-400 stroke-yellow-400" />
+          {property.averageRate?.toFixed(1) ?? "–"}/5
+        </div>
+
         {property.images.length > 1 && (
           <>
             <button
@@ -44,10 +51,12 @@ const PropertyCard = ({ property, currentImageIndex, onPrev, onNext, onClick }: 
             </button>
           </>
         )}
+
         <div className="absolute top-0 right-0 m-2 text-sm font-semibold text-pink-500">
           {property.pricePerNight}$
         </div>
       </div>
+
       <div className="mt-2 font-medium text-pink-600">
         {property.address.city}, {property.address.country}
       </div>

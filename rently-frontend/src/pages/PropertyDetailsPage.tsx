@@ -80,16 +80,9 @@ const PropertyDetailsPage = () => {
   useEffect(() => {
     const checkInFromQuery = searchParams.get("checkIn");
     const checkOutFromQuery = searchParams.get("checkOut");
-    const guestsFromQuery = searchParams.get("guests");
   
     if (checkInFromQuery) setCheckIn(checkInFromQuery);
     if (checkOutFromQuery) setCheckOut(checkOutFromQuery);
-    if (guestsFromQuery) {
-      const guestCount = parseInt(guestsFromQuery);
-      if (!isNaN(guestCount)) {
-        setGuests(Array.from({ length: guestCount }, () => ({ firstName: "", lastName: "" })));
-      }
-    }
   }, [searchParams]);
 
   const handleAddGuest = () => {
@@ -110,7 +103,8 @@ const PropertyDetailsPage = () => {
     try {
       const payload = {
         checkIn,
-        checkOut
+        checkOut,
+        guests
       };
 
       const res = await api.post<BookingResponse>(`/properties/${property.id}/bookings`, payload);

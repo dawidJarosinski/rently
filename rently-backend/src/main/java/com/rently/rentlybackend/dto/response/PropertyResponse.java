@@ -11,6 +11,7 @@ public record PropertyResponse(
         Integer maxNumberOfGuests,
         BigDecimal pricePerNight,
         boolean approved,
+        Double averageRate,
         Address address
 ) {
     public record Address(

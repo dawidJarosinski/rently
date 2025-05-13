@@ -11,6 +11,7 @@ import com.rently.rentlybackend.model.Property;
 import com.rently.rentlybackend.model.User;
 import com.rently.rentlybackend.repository.BookingRepository;
 import com.rently.rentlybackend.repository.PropertyRepository;
+import com.rently.rentlybackend.repository.RatingRepository;
 import com.rently.rentlybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +31,7 @@ public class PropertyService {
     private final PropertyMapper propertyMapper;
     private final AddressMapper addressMapper;
     private final BookingRepository bookingRepository;
+    private final RatingRepository ratingRepository;
 
     public List<PropertyResponse> findAll(String location, LocalDate checkIn, LocalDate checkOut, Integer guestCount) {
         List<Property> properties = propertyRepository.findAll().stream()
@@ -39,7 +41,7 @@ public class PropertyService {
                 .toList();
 
         return properties.stream()
-                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
                 .toList();
     }
 
@@ -58,19 +60,19 @@ public class PropertyService {
 
         propertyRepository.save(property);
 
-        return propertyMapper.toDto(property, addressMapper.toDto(address));
+        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(address));
     }
 
     public PropertyResponse findById(UUID id) {
         Property property = propertyRepository.findPropertyById(id)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
-        return propertyMapper.toDto(property, addressMapper.toDto(property.getAddress()));
+        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress()));
     }
 
     public List<PropertyResponse> findAllByOwnerId(UUID id) {
         return propertyRepository.findPropertiesByUser_Id(id)
                 .stream()
-                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
                 .toList();
     }
 
@@ -82,7 +84,7 @@ public class PropertyService {
 
         property = propertyRepository.save(property);
 
-        return propertyMapper.toDto(property, addressMapper.toDto(property.getAddress()));
+        return propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress()));
     }
 
     @Transactional
@@ -97,14 +99,14 @@ public class PropertyService {
         return propertyRepository.findAll()
                 .stream()
                 .filter(property -> property.isApproved() == approve)
-                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
                 .toList();
     }
 
     public List<PropertyResponse> findAllApprovedOrderByAvgRatingDesc(Integer limit) {
         return propertyRepository.findAllApprovedOrderByAvgRatingDesc()
                 .stream()
-                .map(property -> propertyMapper.toDto(property, addressMapper.toDto(property.getAddress())))
+                .map(property -> propertyMapper.toDto(property, ratingRepository.countAverageRateByProperty(property), addressMapper.toDto(property.getAddress())))
                 .limit(limit)
                 .toList();
     }

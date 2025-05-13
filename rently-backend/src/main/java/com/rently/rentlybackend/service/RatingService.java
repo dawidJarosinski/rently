@@ -1,6 +1,7 @@
 package com.rently.rentlybackend.service;
 
 import com.rently.rentlybackend.dto.request.RatingRequest;
+import com.rently.rentlybackend.dto.response.RatingAverageResponse;
 import com.rently.rentlybackend.dto.response.RatingResponse;
 import com.rently.rentlybackend.exception.BookingException;
 import com.rently.rentlybackend.exception.PropertyException;
@@ -59,5 +60,13 @@ public class RatingService {
                 rating.getUser().getId().toString());
     }
 
-    //todo get ratings by property
+    public RatingAverageResponse getAverageRatingByPropertyId(UUID propertyId) {
+        Property property = propertyRepository.findPropertyById(propertyId)
+                .orElseThrow(() -> new PropertyException("wrong property id"));
+
+        return new RatingAverageResponse(
+                property.getId().toString(),
+                ratingRepository.countAverageRateByProperty(property));
+    }
+
 }

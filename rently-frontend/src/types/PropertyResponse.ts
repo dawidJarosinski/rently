@@ -7,6 +7,7 @@ export interface PropertyResponse {
     maxNumberOfGuests: number;
     pricePerNight: number;
     approved: boolean;
+    averageRate: number;
     address: {
       country: string;
       city: string;
