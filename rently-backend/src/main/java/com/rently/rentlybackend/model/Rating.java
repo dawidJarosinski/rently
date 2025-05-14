@@ -21,7 +21,7 @@ public class Rating {
     @Column(name = "rate", nullable = false)
     private Integer rate;
 
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment")
     private String comment;
 
     @JoinColumn(name = "property_id")

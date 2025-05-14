@@ -11,8 +11,8 @@ const Navbar = () => {
 
   const toggleDropdown = () => setOpen((prev) => !prev);
   const handleLogout = () => {
+    navigate("/");
     logout();
-    navigate("/login");
   };
 
   return (

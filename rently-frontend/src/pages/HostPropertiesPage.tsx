@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { PropertyWithImages } from "../types/PropertyResponse";
+import { PropertyResponse } from "../types/PropertyResponse";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../component/Navbar";
 
 const HostPropertiesPage = () => {
-  const [properties, setProperties] = useState<PropertyWithImages[]>([]);
+  const [properties, setProperties] = useState<PropertyResponse[]>([]);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -18,7 +18,7 @@ const HostPropertiesPage = () => {
 
     const fetchProperties = async () => {
       try {
-        const res = await api.get<PropertyWithImages[]>(`/properties?ownerId=${user.id}`);
+        const res = await api.get<PropertyResponse[]>(`/properties?ownerId=${user.id}`);
         setProperties(res.data);
       } catch (err) {
         console.error("Błąd podczas pobierania nieruchomości hosta:", err);

@@ -2,25 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../component/Navbar";
-
-interface Guest {
-  firstName: string;
-  lastName: string;
-}
-
-interface Booking {
-  id: string;
-  propertyId: string;
-  checkIn: string;
-  checkOut: string;
-  createdAt: string;
-  finalPrice: number;
-  guests: Guest[];
-}
+import { BookingResponse } from "../types/BookingResponse";
 
 const HostBookingsPage = () => {
   const { propertyId } = useParams();
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -28,7 +14,7 @@ const HostBookingsPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await api.get<Booking[]>("/host/bookings", {
+        const res = await api.get<BookingResponse[]>("/host/bookings", {
           params: propertyId ? { propertyId } : {},
         });
         setBookings(res.data);

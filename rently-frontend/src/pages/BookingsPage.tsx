@@ -1,31 +1,30 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import Navbar from "../component/Navbar";
+import { BookingResponse } from "../types/BookingResponse";
+import ReactModal from "react-modal";
+import { AxiosError } from "axios";
 
-interface Guest {
-  firstName: string;
-  lastName: string;
-}
+type RatingRequest = {
+  rate: number;
+  comment: string;
+};
 
-interface Booking {
-  id: string;
-  propertyId: string;
-  checkIn: string;
-  checkOut: string;
-  createdAt: string;
-  finalPrice: number;
-  guests: Guest[];
-}
+ReactModal.setAppElement("#root");
 
 const BookingsPage = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [rating, setRating] = useState<RatingRequest>({ rate: 1, comment: "" });
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await api.get<Booking[]>("/bookings");
+        const res = await api.get<BookingResponse[]>("/bookings");
         setBookings(res.data);
       } catch (err: any) {
         setError("Nie udało się pobrać rezerwacji.");
@@ -47,6 +46,23 @@ const BookingsPage = () => {
     }
   };
 
+  const handleRate = (propertyId: string) => {
+    setSelectedPropertyId(propertyId);
+    setShowRatingModal(true);
+  };
+
+  const submitRating = async () => {
+    if (!selectedPropertyId) return;
+    try {
+      await api.post(`/properties/${selectedPropertyId}/ratings`, rating);
+      setShowRatingModal(false);
+      setRating({ rate: 1, comment: "" });
+      alert("Dziękujemy za ocenę!");
+    } catch (err: unknown | any) {
+      alert("Błąd podczas przesyłania oceny: " + err.response.data);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -63,17 +79,28 @@ const BookingsPage = () => {
               <div key={booking.id} className="bg-white shadow-md border border-pink-300 p-4 rounded-lg">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-lg font-semibold text-pink-600">Rezerwacja na nieruchomość ID: {booking.propertyId}</h2>
+                    <h2 className="text-lg font-semibold text-pink-600">
+                      Rezerwacja na nieruchomość ID: {booking.propertyId}
+                    </h2>
                     <p className="text-sm text-gray-700">od: {booking.checkIn} do: {booking.checkOut}</p>
                     <p className="text-sm text-gray-700">Cena: {booking.finalPrice} zł</p>
                     <p className="text-sm text-gray-700">Goście: {booking.guests.map(g => `${g.firstName} ${g.lastName}`).join(", ")}</p>
                   </div>
-                  <button
-                    onClick={() => handleDelete(booking.id)}
-                    className="text-red-500 hover:text-red-700 text-sm border border-red-300 rounded px-3 py-1"
-                  >
-                    Usuń
-                  </button>
+                  {new Date(booking.checkOut) > new Date() ? (
+                    <button
+                      onClick={() => handleDelete(booking.id)}
+                      className="text-red-500 hover:text-red-700 text-sm border border-red-300 rounded px-3 py-1"
+                    >
+                      Usuń
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleRate(booking.propertyId)}
+                      className="text-pink-600 hover:text-pink-800 text-sm border border-pink-300 rounded px-3 py-1"
+                    >
+                      Oceń
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -82,6 +109,48 @@ const BookingsPage = () => {
 
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
+
+      <ReactModal
+        isOpen={showRatingModal}
+        onRequestClose={() => setShowRatingModal(false)}
+        className="bg-white rounded-lg p-6 max-w-md w-full mx-auto mt-20 outline-none shadow-lg relative"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+      >
+        <h2 className="text-lg font-bold mb-4 text-pink-600">Oceń nieruchomość</h2>
+
+        <label className="block mb-2 text-sm font-medium">Ocena (1-5):</label>
+        <input
+          type="number"
+          min={1}
+          max={5}
+          value={rating.rate}
+          onChange={(e) => setRating({ ...rating, rate: parseInt(e.target.value) })}
+          className="w-full border border-gray-300 rounded px-3 py-1 mb-4"
+        />
+
+        <label className="block mb-2 text-sm font-medium">Wiadomość:</label>
+        <textarea
+          value={rating.comment}
+          onChange={(e) => setRating({ ...rating, comment: e.target.value })}
+          className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+          rows={4}
+        />
+
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={() => setShowRatingModal(false)}
+            className="px-4 py-2 border border-gray-400 rounded text-gray-600"
+          >
+            Anuluj
+          </button>
+          <button
+            onClick={submitRating}
+            className="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+          >
+            Wyślij
+          </button>
+        </div>
+      </ReactModal>
     </>
   );
 };

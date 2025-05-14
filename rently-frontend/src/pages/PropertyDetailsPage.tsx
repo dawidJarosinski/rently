@@ -3,21 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../component/Navbar";
 import { PropertyResponse } from "../types/PropertyResponse";
-
-interface Guest {
-  firstName: string;
-  lastName: string;
-}
-
-interface BookingResponse {
-  id: string;
-  propertyId: string;
-  checkIn: string;
-  checkOut: string;
-  createdAt: string;
-  finalPrice: number;
-  guests: Guest[];
-}
+import { BookingResponse, GuestResponse } from "../types/BookingResponse";
 
 const PropertyDetailsPage = () => {
   const { id } = useParams();
@@ -27,8 +13,8 @@ const PropertyDetailsPage = () => {
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState<Guest[]>([]);
-  const [newGuest, setNewGuest] = useState<Guest>({ firstName: "", lastName: "" });
+  const [guests, setGuests] = useState<GuestResponse[]>([]);
+  const [newGuest, setNewGuest] = useState<GuestResponse>({ firstName: "", lastName: "" });
   const [showGuestInput, setShowGuestInput] = useState(false);
   const [finalPrice, setFinalPrice] = useState<number | null>(null);
   const [bookingResponse, setBookingResponse] = useState<BookingResponse | null>(null);

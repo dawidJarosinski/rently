@@ -1,4 +1,4 @@
-export interface PropertyResponse {
+export type PropertyResponse  = {
   id: string;
   ownerId: string;
   propertyType: string;
