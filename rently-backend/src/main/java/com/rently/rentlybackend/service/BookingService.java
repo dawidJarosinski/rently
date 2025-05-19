@@ -47,6 +47,10 @@ public class BookingService {
             throw new BookingException("this property is not approved");
         }
 
+        if (request.checkIn().isBefore(LocalDate.now()) || request.checkIn().isAfter(request.checkOut())) {
+            throw new BookingException("wrong check in or check out date");
+        }
+
         if (checkAvailability(property, request.checkIn(), request.checkOut())) {
             throw new BookingException("these dates are not available");
         }
