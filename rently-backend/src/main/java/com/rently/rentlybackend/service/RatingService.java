@@ -57,12 +57,15 @@ public class RatingService {
                 rating.getRate(),
                 rating.getComment(),
                 rating.getProperty().getId().toString(),
-                rating.getUser().getId().toString());
+                rating.getUser().getId().toString(),
+                user.getFirstName());
     }
 
     public List<RatingResponse> findRatingsByPropertyId(UUID propertyId) {
         Property property = propertyRepository.findPropertyById(propertyId)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
+        User user = userRepository.findUserByEmail(property.getUser().getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("wrong user"));
 
         return ratingRepository.findRatingsByProperty(property)
                 .stream()
@@ -71,7 +74,8 @@ public class RatingService {
                         rating.getRate(),
                         rating.getComment(),
                         rating.getProperty().getId().toString(),
-                        rating.getUser().getId().toString()))
+                        rating.getUser().getId().toString(),
+                        user.getFirstName()))
                 .toList();
     }
 

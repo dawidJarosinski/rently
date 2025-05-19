@@ -5,6 +5,7 @@ public record RatingResponse(
         Integer rate,
         String comment,
         String propertyId,
-        String userId
+        String userId,
+        String firstName
 ) {
 }

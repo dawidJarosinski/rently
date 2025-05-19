@@ -3,7 +3,7 @@ import api from "../services/api";
 import Navbar from "../component/Navbar";
 import { BookingResponse } from "../types/BookingResponse";
 import ReactModal from "react-modal";
-import { AxiosError } from "axios";
+
 
 type RatingRequest = {
   rate: number;
