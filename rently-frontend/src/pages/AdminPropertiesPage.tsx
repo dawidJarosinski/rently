@@ -4,6 +4,7 @@ import api from "../services/api";
 import { PropertyResponse } from "../types/PropertyResponse";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../component/Navbar";
+import { ShieldCheck, Check, X } from "lucide-react";
 
 const AdminPropertiesPage = () => {
   const [properties, setProperties] = useState<PropertyResponse[]>([]);
@@ -50,49 +51,62 @@ const AdminPropertiesPage = () => {
 
   return (
     <>
-        <Navbar />
-        <div className="p-6">
-        <h1 className="text-2xl font-bold text-pink-600 mb-6">Nieruchomości do zatwierdzenia</h1>
+      <Navbar />
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="flex items-center gap-2 mb-6">
+          <ShieldCheck className="w-6 h-6 text-pink-600" />
+          <h1 className="text-3xl font-bold text-pink-600">
+            Nieruchomości do zatwierdzenia
+          </h1>
+        </div>
 
         {properties.length === 0 ? (
-            <p className="text-gray-500">Brak nieruchomości do zatwierdzenia.</p>
+          <p className="text-gray-500 text-center mt-10">
+            Brak nieruchomości do zatwierdzenia.
+          </p>
         ) : (
-            <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {properties.map((property) => (
-                <div
+              <div
                 key={property.id}
-                className="bg-cyan-100 p-4 rounded-lg shadow border border-pink-300"
-                >
-                <div className="flex justify-between items-center">
-                    <div onClick={() => navigate(`/properties/${property.id}`)} className="cursor-pointer">
-                    <h2 className="text-lg font-semibold text-pink-600">{property.name}</h2>
+                className="bg-white border border-pink-300 shadow-sm p-5 rounded-xl"
+              >
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                  <div
+                    onClick={() => navigate(`/properties/${property.id}`)}
+                    className="cursor-pointer"
+                  >
+                    <h2 className="text-xl font-semibold text-pink-600">
+                      {property.name}
+                    </h2>
                     <p className="text-gray-700">
-                        {property.address.city}, {property.address.country}
+                      {property.address.city}, {property.address.country}
                     </p>
-                    <p className="text-sm text-gray-500">
-                        {property.pricePerNight} $ / noc
+                    <p className="text-sm text-gray-500 mt-1">
+                      {property.pricePerNight} zł / noc
                     </p>
-                    </div>
-                    <div className="flex gap-2">
+                  </div>
+
+                  <div className="flex gap-2">
                     <button
-                        onClick={() => handleApprove(property.id)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg"
+                      onClick={() => handleApprove(property.id)}
+                      className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full shadow"
                     >
-                        ✅ Zatwierdź
+                      <Check className="w-4 h-4" /> Zatwierdź
                     </button>
                     <button
-                        onClick={() => handleDecline(property.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg"
+                      onClick={() => handleDecline(property.id)}
+                      className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full shadow"
                     >
-                        ❌ Odrzuć
+                      <X className="w-4 h-4" /> Odrzuć
                     </button>
-                    </div>
+                  </div>
                 </div>
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         )}
-        </div>
+      </div>
     </>
   );
 };
