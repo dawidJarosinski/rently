@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,8 +30,9 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ratingService.save(id, request, principal.getName()));
     }
 
-    @GetMapping("/properties/{id}/ratings/average")
-    public ResponseEntity<RatingAverageResponse> getAverageRatingByPropertyId(@PathVariable UUID id) {
-        return ResponseEntity.ok(ratingService.getAverageRatingByPropertyId(id));
+    @GetMapping("/properties/{id}/ratings")
+    public ResponseEntity<List<RatingResponse>> findRatingsByProperty(
+            @PathVariable UUID id) {
+        return ResponseEntity.ok(ratingService.findRatingsByPropertyId(id));
     }
 }

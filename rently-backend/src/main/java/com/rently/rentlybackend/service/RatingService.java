@@ -60,13 +60,19 @@ public class RatingService {
                 rating.getUser().getId().toString());
     }
 
-    public RatingAverageResponse getAverageRatingByPropertyId(UUID propertyId) {
+    public List<RatingResponse> findRatingsByPropertyId(UUID propertyId) {
         Property property = propertyRepository.findPropertyById(propertyId)
                 .orElseThrow(() -> new PropertyException("wrong property id"));
 
-        return new RatingAverageResponse(
-                property.getId().toString(),
-                ratingRepository.countAverageRateByProperty(property));
+        return ratingRepository.findRatingsByProperty(property)
+                .stream()
+                .map(rating -> new RatingResponse(
+                        rating.getId().toString(),
+                        rating.getRate(),
+                        rating.getComment(),
+                        rating.getProperty().getId().toString(),
+                        rating.getUser().getId().toString()))
+                .toList();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.rently.rentlybackend.repository;
 
 import com.rently.rentlybackend.model.Property;
+import com.rently.rentlybackend.model.Rating;
 import com.rently.rentlybackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

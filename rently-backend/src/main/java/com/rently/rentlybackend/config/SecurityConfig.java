@@ -36,6 +36,7 @@ public class SecurityConfig {
                                     .requestMatchers("/api/register").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/property/{id}/ratings/average").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "api/properties/{id}/ratings").permitAll()
                                     .requestMatchers("/api/host/**").hasRole("HOST")
                                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                     .requestMatchers(HttpMethod.POST, "/api/properties/{id}/bookings").hasRole("USER")
