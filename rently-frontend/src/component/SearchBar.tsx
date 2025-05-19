@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 
 const SearchBar = () => {
   const [destination, setDestination] = useState("");
@@ -53,7 +54,7 @@ const SearchBar = () => {
         onClick={handleSearch}
         className="rounded-full bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] text-white px-4 py-2 shadow-lg"
       >
-        🔍
+        <Search/>
       </button>
     </div>
   );

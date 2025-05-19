@@ -68,8 +68,7 @@ public class PropertyService {
                 property,
                 ratingRepository.countAverageRateByProperty(property),
                 addressMapper.toDto(property.getAddress()),
-                convertImagesIdsToImageUrls(googleDriveUploaderService.findPhotosIdByPropertyId(property.getId()))
-        );
+                List.of(""));
     }
 
     public PropertyResponse findById(UUID id) {
