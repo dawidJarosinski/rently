@@ -2,6 +2,7 @@ package com.rently.rentlybackend.service;
 
 import com.rently.rentlybackend.dto.request.BookingRequest;
 import com.rently.rentlybackend.dto.response.BookingResponse;
+import com.rently.rentlybackend.event.BookingEvent;
 import com.rently.rentlybackend.exception.BookingException;
 import com.rently.rentlybackend.exception.PropertyException;
 import com.rently.rentlybackend.mapper.BookingMapper;
@@ -15,6 +16,7 @@ import com.rently.rentlybackend.repository.PropertyRepository;
 import com.rently.rentlybackend.repository.BookingRepository;
 import com.rently.rentlybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ public class BookingService {
     private final BookingMapper bookingMapper;
     private final GuestMapper guestMapper;
     private final BookingRepository bookingRepository;
+    private final KafkaTemplate<String, BookingEvent> kafkaTemplate;
 
     @Transactional
     public BookingResponse save(BookingRequest request, UUID propertyId, String currentUserEmail) {
@@ -71,7 +74,16 @@ public class BookingService {
 
         bookingRepository.save(booking);
 
-        return bookingMapper.toDto(booking, countFinalPrice(booking));
+        BigDecimal finalPrice = countFinalPrice(booking);
+
+        kafkaTemplate.send("booking",
+                new BookingEvent(
+                        user.getEmail(),
+                        user.getFirstName(),
+                        finalPrice,
+                        booking.getId().toString()));
+
+        return bookingMapper.toDto(booking, finalPrice);
     }
 
     public List<BookingResponse> findAllByUser(String currentUserEmail) {
