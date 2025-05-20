@@ -5,10 +5,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/rently-db
     username: postgres
     password: password
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    show-sql: true
+    defer-datasource-initialization: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -42,3 +43,6 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  sql:
+    init:
+      mode: always

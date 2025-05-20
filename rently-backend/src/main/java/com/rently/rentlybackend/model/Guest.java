@@ -25,7 +25,7 @@ public class Guest {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @JoinColumn(name = "rent_id", nullable = false)
+    @JoinColumn(name = "booking_id", nullable = false)
     @ManyToOne(cascade = CascadeType.ALL)
     private Booking booking;
 

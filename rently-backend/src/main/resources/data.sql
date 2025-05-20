@@ -1,0 +1,105 @@
+-- USERS
+INSERT INTO users (id, email, password, first_name, last_name, role) VALUES
+('00000000-0000-0000-0000-000000000001', 'user@example.com', '$2a$12$JeGOG1YvQgSRG.wnVSorpOSHH9nh77qgeN6m3Azo/XNCZjWONzRmS', 'User', 'Testowy', 'USER'),
+('00000000-0000-0000-0000-000000000002', 'host@example.com', '$2a$12$JeGOG1YvQgSRG.wnVSorpOSHH9nh77qgeN6m3Azo/XNCZjWONzRmS', 'Host', 'Testowy', 'HOST'),
+('00000000-0000-0000-0000-000000000003', 'admin@example.com', '$2a$12$JeGOG1YvQgSRG.wnVSorpOSHH9nh77qgeN6m3Azo/XNCZjWONzRmS', 'Admin', 'Testowy', 'ADMIN');
+
+-- PROPERTIES + ADDRESSES
+
+-- P1 (Kraków)
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000001', 'Apartament Kraków 1', 'Nowoczesne studio w centrum Krakowa', 3, 150.00, 'APARTMENT', true, '00000000-0000-0000-0000-000000000002');
+
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000001', 'Polska', 'Kraków', 'Szewska', '12', '1', '31-009');
+
+-- P2 (Warszawa)
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000002', 'Apartament Warszawa 1', 'Wygodne mieszkanie blisko metra', 4, 220.00, 'APARTMENT', true, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000002', 'Polska', 'Warszawa', 'Marszałkowska', '45', '8', '00-545');
+
+-- P3 (Wrocław)
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000003', 'Apartament Wrocław 1', 'Stylowe mieszkanie na rynku', 2, 180.00, 'APARTMENT', true, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000003', 'Polska', 'Wrocław', 'Rynek', '1', '2', '50-101');
+
+-- P4 (Kraków) – NOT APPROVED
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000004', 'Apartament Kraków 2', 'Apartament w spokojnej dzielnicy', 2, 130.00, 'APARTMENT', false, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000004', 'Polska', 'Kraków', 'Zamkowa', '7', NULL, '30-301');
+
+-- P5 (Warszawa) – NOT APPROVED
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000005', 'Apartament Warszawa 2', 'Luksusowy apartament w centrum', 5, 400.00, 'HOUSE', false, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000005', 'Polska', 'Warszawa', 'Złota', '44', '15', '00-120');
+
+-- P6 (Wrocław)
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000006', 'Apartament Wrocław 2', 'Przytulny apartament na przedmieściach', 3, 160.00, 'HOUSE', true, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000006', 'Polska', 'Wrocław', 'Bajana', '12', NULL, '54-129');
+
+-- P7 (Warszawa)
+INSERT INTO properties (id, name, description, max_number_of_guests, price_per_night, type, approved, user_id)
+VALUES ('10000000-0000-0000-0000-000000000007', 'Apartament Warszawa 3', 'Klimatyczne mieszkanie z balkonem', 2, 170.00, 'HOUSE', true, '00000000-0000-0000-0000-000000000002');
+INSERT INTO addresses (property_id, country, city, street, house_number, local_number, postal_code)
+VALUES ('10000000-0000-0000-0000-000000000007', 'Polska', 'Warszawa', 'Grochowska', '90', '3', '04-077');
+
+-- RATINGS (2 per property)
+-- For each property id from P1 to P7 (ID ending in 001–007)
+INSERT INTO ratings (id, rate, comment, property_id, user_id) VALUES
+('20000000-0000-0000-0000-000000000001', 5, 'Super miejsce, bardzo polecam!', '10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000002', 4, 'Bardzo fajnie, tylko trochę głośno', '10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000003', 3, 'Średnie warunki, ale dobra lokalizacja', '10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000004', 2, 'Brak internetu i niedziałający TV', '10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000005', 5, 'Fantastyczny widok z okna!', '10000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000006', 4, 'Czysto, nowocześnie i przyjemnie', '10000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000007', 1, 'Zimno, wilgoć i brak ogrzewania', '10000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000008', 2, 'Nie wrócę tu ponownie', '10000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000009', 5, 'Luksus w pełnej krasie!', '10000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000010', 4, 'Cudowna obsługa i komfort', '10000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000011', 3, 'Przeciętnie, ale tanio', '10000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000012', 4, 'Miły właściciel i dobra lokalizacja', '10000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000001'),
+
+('20000000-0000-0000-0000-000000000013', 4, 'Spokojna okolica, polecam', '10000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000001'),
+('20000000-0000-0000-0000-000000000014', 5, 'Rewelacyjne miejsce na weekend', '10000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000001');
+
+-- BOOKINGS + GUESTS
+
+INSERT INTO bookings (id, user_id, property_id, check_in, check_out, created_at) VALUES
+('30000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', '2025-07-01', '2025-07-05', NOW()),
+('30000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', '2025-08-10', '2025-08-15', NOW()),
+('30000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000002', '2025-06-01', '2025-06-04', NOW()),
+('30000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000002', '2025-09-10', '2025-09-15', NOW()),
+('30000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000003', '2025-05-15', '2025-05-18', NOW()),
+('30000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000003', '2025-10-01', '2025-10-03', NOW()),
+('30000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000006', '2025-07-20', '2025-07-25', NOW()),
+('30000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000006', '2025-12-01', '2025-12-03', NOW()),
+('30000000-0000-0000-0000-000000000009', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000007', '2025-11-01', '2025-11-04', NOW()),
+('30000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000007', '2025-12-10', '2025-12-14', NOW());
+
+INSERT INTO guests (id, first_name, last_name, booking_id) VALUES
+('40000000-0000-0000-0000-000000000001', 'Paweł', 'Mazur', '30000000-0000-0000-0000-000000000001'),
+('40000000-0000-0000-0000-000000000002', 'Ewa', 'Mazur', '30000000-0000-0000-0000-000000000002'),
+('40000000-0000-0000-0000-000000000003', 'Karolina', 'Wiśniewska', '30000000-0000-0000-0000-000000000003'),
+('40000000-0000-0000-0000-000000000004', 'Tomasz', 'Wiśniewski', '30000000-0000-0000-0000-000000000003'),
+('40000000-0000-0000-0000-000000000005', 'Iga', 'Nowak', '30000000-0000-0000-0000-000000000004'),
+('40000000-0000-0000-0000-000000000006', 'Maciej', 'Kowal', '30000000-0000-0000-0000-000000000005'),
+('40000000-0000-0000-0000-000000000007', 'Kasia', 'Kowal', '30000000-0000-0000-0000-000000000006'),
+('40000000-0000-0000-0000-000000000008', 'Aleksander', 'Lis', '30000000-0000-0000-0000-000000000007'),
+('40000000-0000-0000-0000-000000000009', 'Natalia', 'Lis', '30000000-0000-0000-0000-000000000007'),
+('40000000-0000-0000-0000-000000000010', 'Krzysztof', 'Kruk', '30000000-0000-0000-0000-000000000008'),
+('40000000-0000-0000-0000-000000000011', 'Joanna', 'Zając', '30000000-0000-0000-0000-000000000009'),
+('40000000-0000-0000-0000-000000000012', 'Sebastian', 'Zając', '30000000-0000-0000-0000-000000000010');
+
+
+
