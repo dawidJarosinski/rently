@@ -17,12 +17,10 @@ const Navbar = () => {
 
   return (
     <nav className="w-full px-6 py-4 bg-white shadow-md flex items-center justify-between">
-      {/* Logo */}
       <Link to="/">
         <Logo />
       </Link>
 
-      {/* Right section */}
       {!user ? (
         <div className="flex gap-3 flex-wrap justify-center items-center">
           <Link to="/register-host">
@@ -30,7 +28,7 @@ const Navbar = () => {
               Start renting your house
             </button>
           </Link>
-          <Link to="/register/user">
+          <Link to="/register">
             <button className="text-white bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] hover:brightness-110 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 transition shadow">
               Sign Up
             </button>
@@ -43,7 +41,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="relative flex items-center gap-4">
-          {/* Avatar Dropdown */}
+
           <button
             onClick={toggleDropdown}
             className="text-gray-600 hover:text-purple-600 text-2xl transition"
@@ -51,7 +49,6 @@ const Navbar = () => {
             <FaUserCircle />
           </button>
 
-          {/* Logout */}
           <button
             onClick={handleLogout}
             className="text-white bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] hover:brightness-110 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 transition shadow"

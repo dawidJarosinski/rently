@@ -11,11 +11,11 @@ interface RegisterForm {
 }
 
 const RegisterHostPage = () => {
-  const [formData, setFormData] = useState<RegisterForm>({ 
-    email: "", 
-    password: "", 
-    firstName: "", 
-    lastName: "" 
+  const [formData, setFormData] = useState<RegisterForm>({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: ""
   });
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,29 +45,27 @@ const RegisterHostPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
           <div className="p-8">
             <div className="flex justify-center mb-6">
               <Logo />
             </div>
-            
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Zarejestruj się</h2>
-            <p className="text-gray-600 text-center mb-8">Jako właściciel nieruchomości</p>
-            
+
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-1">Załóż konto</h2>
+            <p className="text-gray-500 text-center mb-6">dla właściciela nieruchomości</p>
+
             {error && (
-              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm border border-red-200">
                 {error}
               </div>
             )}
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
+
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Imię
-                  </label>
+                  <label htmlFor="firstName" className="text-sm font-medium text-gray-700">Imię</label>
                   <input
                     id="firstName"
                     type="text"
@@ -75,14 +73,12 @@ const RegisterHostPage = () => {
                     placeholder="Jan"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
+                    className="w-full mt-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Nazwisko
-                  </label>
+                  <label htmlFor="lastName" className="text-sm font-medium text-gray-700">Nazwisko</label>
                   <input
                     id="lastName"
                     type="text"
@@ -90,16 +86,14 @@ const RegisterHostPage = () => {
                     placeholder="Kowalski"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
+                    className="w-full mt-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                     required
                   />
                 </div>
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
+                <label htmlFor="email" className="text-sm font-medium text-gray-700">Email</label>
                 <input
                   id="email"
                   type="email"
@@ -107,15 +101,13 @@ const RegisterHostPage = () => {
                   placeholder="podaj@email.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
+                  className="w-full mt-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                   required
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                  Hasło
-                </label>
+                <label htmlFor="password" className="text-sm font-medium text-gray-700">Hasło</label>
                 <input
                   id="password"
                   type="password"
@@ -123,32 +115,34 @@ const RegisterHostPage = () => {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
+                  className="w-full mt-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                   required
                   minLength={6}
                 />
                 <p className="mt-1 text-xs text-gray-500">Minimum 6 znaków</p>
               </div>
-              
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                <h3 className="font-medium text-blue-800 mb-2">Rejestracja jako właściciel</h3>
-                <p className="text-sm text-blue-700">
-                  Po rejestracji będziesz mógł zarządzać swoimi nieruchomościami i wynajmować je użytkownikom.
-                </p>
+
+              <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 text-sm text-blue-800">
+                <h3 className="font-semibold mb-1">Dlaczego warto?</h3>
+                <p>Zarządzaj swoimi nieruchomościami i wynajmuj je użytkownikom z całego świata.</p>
               </div>
-              
+
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 px-4 text-white bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 shadow-lg shadow-purple-500/50 font-medium rounded-lg text-sm text-center me-2 mb-2 ${
+                className={`w-full py-3 text-white bg-gradient-to-r from-[#B24EFF] to-[#FC56FF] hover:bg-gradient-to-br font-medium rounded-lg shadow-md transition ${
                   isLoading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
                 {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <span className="flex justify-center items-center gap-2">
+                    <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+                      />
                     </svg>
                     Rejestracja...
                   </span>
@@ -157,11 +151,11 @@ const RegisterHostPage = () => {
                 )}
               </button>
             </form>
-            
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+
+            <div className="mt-6 text-center text-sm">
+              <p className="text-gray-600">
                 Masz już konto?{" "}
-                <a href="/login" className="text-blue-600 hover:text-blue-800 font-medium">
+                <a href="/login" className="text-blue-600 hover:underline font-medium">
                   Zaloguj się
                 </a>
               </p>
