@@ -48,4 +48,9 @@ public class Address {
         this.localNumber = localNumber;
         this.postalCode = postalCode;
     }
+
+    public Address(String city, String country) {
+        this.city = city;
+        this.country = country;
+    }
 }
