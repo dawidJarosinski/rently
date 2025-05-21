@@ -34,6 +34,9 @@ public class SecurityConfig {
                             request
                                     .requestMatchers("/api/login").permitAll()
                                     .requestMatchers("/api/register").permitAll()
+                                    .requestMatchers("/v3/api-docs/**",
+                                            "/swagger-ui/**",
+                                            "/swagger-ui.html").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/property/{id}/ratings/average").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/api/properties/**").permitAll()
                                     .requestMatchers(HttpMethod.GET, "api/properties/{id}/ratings").permitAll()
