@@ -107,3 +107,5 @@ Maven – zarządzanie zależnościami i automatyzacja budowania backendu.
 
 Vite – szybki i nowoczesny bundler dla aplikacji React, zapewniający błyskawiczny HMR i kompilację.
 
+## 🗃️ Diagram ERD
+![diagramRently](https://github.com/user-attachments/assets/dc45347a-3290-4aa8-bc5b-b17e15f71254)
