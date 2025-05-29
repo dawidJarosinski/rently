@@ -1,8 +1,9 @@
 package com.rently.rentlybackend.service;
 
+import com.rently.rentlybackend.config.RabbitConfig;
 import com.rently.rentlybackend.dto.request.BookingRequest;
 import com.rently.rentlybackend.dto.response.BookingResponse;
-import com.rently.rentlybackend.event.BookingEvent;
+import com.rently.rentlybackend.exchange.BookingExchange;
 import com.rently.rentlybackend.exception.BookingException;
 import com.rently.rentlybackend.exception.PropertyException;
 import com.rently.rentlybackend.mapper.BookingMapper;
@@ -11,12 +12,14 @@ import com.rently.rentlybackend.model.Booking;
 import com.rently.rentlybackend.model.Guest;
 import com.rently.rentlybackend.model.Property;
 import com.rently.rentlybackend.model.User;
-import com.rently.rentlybackend.repository.GuestRepository;
 import com.rently.rentlybackend.repository.PropertyRepository;
 import com.rently.rentlybackend.repository.BookingRepository;
 import com.rently.rentlybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +39,7 @@ public class BookingService {
     private final BookingMapper bookingMapper;
     private final GuestMapper guestMapper;
     private final BookingRepository bookingRepository;
-    private final KafkaTemplate<String, BookingEvent> kafkaTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Transactional
     public BookingResponse save(BookingRequest request, UUID propertyId, String currentUserEmail) {
@@ -76,8 +79,9 @@ public class BookingService {
 
         BigDecimal finalPrice = countFinalPrice(booking);
 
-        kafkaTemplate.send("booking",
-                new BookingEvent(
+        rabbitTemplate.convertAndSend(
+                "BookingQueue",
+                new BookingExchange(
                         user.getEmail(),
                         user.getFirstName(),
                         finalPrice,

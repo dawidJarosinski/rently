@@ -1,8 +1,9 @@
 package com.rently.rentlybackend.service;
 
-import com.rently.rentlybackend.event.BookingEvent;
+import com.rently.rentlybackend.config.RabbitConfig;
+import com.rently.rentlybackend.exchange.BookingExchange;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +12,12 @@ public class EmailNotificationService {
 
     private final MailSernderService mailSernderService;
 
-    @KafkaListener(topics = "booking", groupId = "booking-group")
-    public void handleBookingEvent(BookingEvent bookingEvent) {
+    @RabbitListener(queues = "BookingQueue")
+    public void handleBookingEvent(BookingExchange bookingExchange) {
         mailSernderService.sendMail(
-                bookingEvent.email(),
-                "Reservation " + bookingEvent.bookingId(),
-                "Thanks " + bookingEvent.firstName() + " for reservation, final price: " + bookingEvent.finalPrice()
+                bookingExchange.email(),
+                "Reservation " + bookingExchange.bookingId(),
+                "Thanks " + bookingExchange.firstName() + " for reservation, final price: " + bookingExchange.finalPrice()
         );
     }
 }
