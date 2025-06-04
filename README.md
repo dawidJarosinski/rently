@@ -109,3 +109,14 @@ Vite – szybki i nowoczesny bundler dla aplikacji React, zapewniający błyskaw
 
 ## 🗃️ Diagram ERD
 ![diagramRently](https://github.com/user-attachments/assets/dc45347a-3290-4aa8-bc5b-b17e15f71254)
+
+## RabbitMQ Broker
+[http://localhost:15672/](http://localhost:15672/)
+```bash
+username: guest
+password: guest
+```
+
+## Swagger Docs
+[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
