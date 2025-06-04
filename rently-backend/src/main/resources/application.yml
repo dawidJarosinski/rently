@@ -17,7 +17,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: dawidapplication@gmail.com
-    password: ktxk xahl aewo cqt
+    password: eqob uefs qxit cyll
     properties:
       mail:
         transport:
